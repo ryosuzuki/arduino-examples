@@ -13,3 +13,5 @@ Bill of Materials
 
 [Sparkfun - ESP8266 Thing Development Board Hookup Guide](https://learn.sparkfun.com/tutorials/esp8266-thing-development-board-hookup-guide/all)
 
+
+![](https://raw.githubusercontent.com/ryosuzuki/arduino-examples/master/esp8266-motor-control/esp8266-motor-control.png)
