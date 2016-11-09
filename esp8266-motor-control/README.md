@@ -9,3 +9,5 @@ Bill of Materials
 - A3 Batteries x 2
 - Battery Holder - 2x18650
 
+![](https://cdn.sparkfun.com/assets/learn_tutorials/4/4/5/esp8266-top.jpg)
+
