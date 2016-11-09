@@ -15,3 +15,18 @@ Bill of Materials
 
 
 ![](https://raw.githubusercontent.com/ryosuzuki/arduino-examples/master/esp8266-motor-control/esp8266-motor-control.png)
+
+```c
+//Motor A
+const int PWMA = 5; 
+const int AIN1 = 0;
+const int AIN2 = 4;
+
+const int STBY = 13;
+
+//Motor B
+const int BIN1 = 12;
+const int BIN2 = 16;
+const int PWMB = 15;
+```
+
