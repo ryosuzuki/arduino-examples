@@ -1,0 +1,92 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>ESP8266 Web Motor Control</title>
+  <meta name="description" content="ESP8266 Web Motor Control">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.6/semantic.css">
+  <link rel="stylesheet" href="https://cdn.rawgit.com/tyleryasaka/semantic-ui-range/master/range.css">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+
+  <script>
+    var base = 'http://10.0.1.9';
+    var state = 'stop';
+    var speed = 100;
+    $(function() {
+      $('#ip-address input').val(base);
+      $('#speed input').val(speed);
+
+      $('#ip-address').submit(function(event) {
+        event.preventDefault();
+        base = $('input', this).val();
+        console.log(base)
+      });
+
+      $('#speed').submit(function(event) {
+        event.preventDefault();
+        speed = $('input', this).val();
+        console.log(speed)
+        if (speed < 0) {
+          speed = 0;
+        } else if (speed > 255) {
+          speed = 255;
+        }
+        $.ajax({
+          type: 'GET',
+          url: base + '?speed=' + speed
+        })
+      });
+
+      $('button').click(function(event) {
+        state = $(this).attr('id')
+        console.log(state)
+        $.ajax({
+          type: 'GET',
+          url: base + '?state=' + state
+        })
+      })
+    })
+
+  </script>
+
+</head>
+<body>
+
+  <div class="ui grid centered">
+
+    <div class="eight wide column">
+      <form id="ip-address" class="ui form">
+        <div class="field">
+          <label>IP Address</label>
+          <input type="text">
+        </div>
+      </form>
+
+      <div class="ui divider"></div>
+
+      <button id="forward" class="ui button">Forward</button>
+      <button id="back" class="ui button">Back</button>
+      <button id="stop" class="ui button">Stop</button>
+
+      <div class="ui divider"></div>
+
+      <button id="left" class="ui button">Left</button>
+      <button id="right" class="ui button">Right</button>
+
+      <div class="ui divider"></div>
+
+      <form id="speed" class="ui form">
+        <div class="field">
+          <label>Speed</label>
+          <input type="text">
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+
+</body>
+</html>
