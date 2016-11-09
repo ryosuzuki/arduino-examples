@@ -11,3 +11,5 @@ Bill of Materials
 
 ![](https://cdn.sparkfun.com/assets/learn_tutorials/4/4/5/esp8266-top.jpg)
 
+[Sparkfun - ESP8266 Thing Development Board Hookup Guide](https://learn.sparkfun.com/tutorials/esp8266-thing-development-board-hookup-guide/all)
+
