@@ -8,21 +8,17 @@ const char *password = "ryotomomi";
 
 ESP8266WebServer server(80);
 
-/* Just a little test message.  Go to http://192.168.4.1 in a web browser
-   connected to this access point to see it.
-*/
-
-const int STBY = 16; //standby
-
 //Motor A
-const int PWMA = 5; //Speed control 5 
-const int AIN1 = 4; //Direction 4 
-const int AIN2 = 14; //Direction 14
+const int PWMA = 5; 
+const int AIN1 = 0; 
+const int AIN2 = 4;
+
+const int STBY = 13;
 
 //Motor B
-const int PWMB = 12; //Speed control 12
-const int BIN1 = 13; //Direction 13
-const int BIN2 = 15; //Direction 15
+const int PWMB = 12;
+const int BIN1 = 16;
+const int BIN2 = 15;
 
 const int LED_PIN = 2;
 
@@ -99,13 +95,6 @@ void setup() {
     server.send(200, "text/plain", "hello from esp8266!");
     delay(1000);    
     digitalWrite(LED_PIN, 0);  
-
-    motor_speed = 100;
-    Serial.println(motor_speed);
-    move(1, motor_speed, 1); //motor 1(A), full speed, left
-    move(0, motor_speed, 1); //motor 2(B), full speed, left
-    delay(1000); //hold for 250ms until move again
-    stop();
 
     String url = server.arg("pin");
     String state = url.substring(0, 3);
