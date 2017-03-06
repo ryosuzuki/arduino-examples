@@ -16,7 +16,7 @@ const int DIGITAL_PIN = 12; // Digital pin to be read
 
 WiFiServer server(80);
 
-void setup() 
+void setup()
 {
   initHardware();
   connectWiFi();
@@ -24,7 +24,7 @@ void setup()
   setupMDNS();
 }
 
-void loop() 
+void loop()
 {
   // Check if a client has connected
   WiFiClient client = server.available();
@@ -83,7 +83,7 @@ void loop()
   delay(1);
   Serial.println("Client disonnected");
 
-  // The client will actually be disconnected 
+  // The client will actually be disconnected
   // when the function returns and 'client' object is detroyed
 }
 
@@ -116,7 +116,7 @@ void connectWiFi()
     // Add delays -- allowing the processor to perform other
     // tasks -- wherever possible.
   }
-  Serial.println("WiFi connected");  
+  Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 }
@@ -125,10 +125,10 @@ void setupMDNS()
 {
   // Call MDNS.begin(<domain>) to set up mDNS to point to
   // "<domain>.local"
-  if (!MDNS.begin("thing")) 
+  if (!MDNS.begin("thing"))
   {
     Serial.println("Error setting up MDNS responder!");
-    while(1) { 
+    while(1) {
       delay(1000);
     }
   }
@@ -142,7 +142,7 @@ void initHardware()
   pinMode(DIGITAL_PIN, INPUT_PULLUP);
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, HIGH);
-  // Don't need to set ANALOG_PIN as input, 
+  // Don't need to set ANALOG_PIN as input,
   // that's all it can be.
 }
 
