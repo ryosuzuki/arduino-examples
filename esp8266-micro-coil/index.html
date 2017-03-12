@@ -1,0 +1,126 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>ESP8266 Web Motor Control</title>
+  <meta name="description" content="ESP8266 Web Motor Control">
+  <link rel="stylesheet" href="lib/semantic.min.css">
+  <script type="text/javascript" src="lib/jquery.min.js"></script>
+
+  <style>
+    td {
+      width: 130px;
+      height: 130px;
+      text-align: center;
+      border: 1px solid rgba(34,36,38,.1);
+      cursor: pointer;
+    }
+    td:hover {
+      background-color: #eee;
+    }
+  </style>
+
+  <script>
+    var base = 'http://192.168.4.1/';
+    $(function() {
+      $('#ip-address input').val(base);
+
+      $('#ip-address').submit(function(event) {
+        event.preventDefault();
+        base = $('input', this).val();
+        console.log(base)
+      });
+
+      $('td').click(function(event) {
+        const key = $(this).attr('id')
+        const row = parseInt(key.split('-')[0])
+        const col = parseInt(key.split('-')[1])
+        const colId = function(col) {
+          switch (col) {
+            case 1:
+            return 1;
+            case 2:
+            return 2;
+            case 3:
+            return 4;
+            case 4:
+            return 8;
+          }
+        }
+        const rowId = function(row) {
+          switch (row) {
+            case 1:
+            return 240 - 16;
+            case 2:
+            return 240 - 32;
+            case 3:
+            return 240 - 64;
+            case 4:
+            return 240 - 128;
+          }
+        }
+
+        let id = colId(col) + rowId(row)
+        console.log(id)
+
+        $.ajax({
+          method: 'GET',
+          url: base + '?id=' + id
+        }).then(function(res) {
+          console.log(res)
+        })
+      })
+    })
+  </script>
+
+</head>
+<body>
+
+  <div class="ui grid centered">
+
+    <div class="eight wide column">
+      <form id="ip-address" class="ui form">
+        <div class="field">
+          <label>IP Address</label>
+          <input type="text">
+        </div>
+      </form>
+
+      <div class="ui divider"></div>
+
+      <table id="grid">
+        <tbody>
+          <tr>
+            <td id="1-1">1-1</td>
+            <td id="1-2">1-2</td>
+            <td id="1-3">1-3</td>
+            <td id="1-4">1-4</td>
+          </tr>
+          <tr>
+            <td id="2-1">2-1</td>
+            <td id="2-2">2-2</td>
+            <td id="2-3">2-3</td>
+            <td id="2-4">2-4</td>
+          </tr>
+          <tr>
+            <td id="3-1">3-1</td>
+            <td id="3-2">3-2</td>
+            <td id="3-3">3-3</td>
+            <td id="3-4">3-4</td>
+          </tr>
+          <tr>
+            <td id="4-1">4-1</td>
+            <td id="4-2">4-2</td>
+            <td id="4-3">4-3</td>
+            <td id="4-4">4-4</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+</body>
+</html>

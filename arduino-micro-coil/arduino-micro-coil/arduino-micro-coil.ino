@@ -7,10 +7,23 @@ void setup() {
   pinMode(latchPin, OUTPUT);
   pinMode(clockPin, OUTPUT);
   pinMode(dataPin, OUTPUT);
+
+  Serial.begin(9600);
 }
 
 void loop() {
   digitalWrite(latchPin, LOW);
-  shiftOut(dataPin, clockPin, MSBFIRST, 57);
+  shiftOut(dataPin, clockPin, MSBFIRST, 3);
   digitalWrite(latchPin, HIGH);
+  Serial.println(3);
+ 
+  delay(1000);
+
+  digitalWrite(latchPin, LOW);
+  shiftOut(dataPin, clockPin, MSBFIRST, 2);
+  digitalWrite(latchPin, HIGH);
+  Serial.println(2);
+
+  delay(1000);
+
 }
