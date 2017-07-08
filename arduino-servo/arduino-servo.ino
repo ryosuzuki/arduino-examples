@@ -1,49 +1,33 @@
+#include <ArduinoJson.h>
 #include <Servo.h>
 
-Servo servo1; Servo servo2; 
-
+Servo servo1; 
+Servo servo2; 
+int pin1 = 9;
+int pin2 = 10;
 
 void setup() {
-
   pinMode(1,OUTPUT);
-  servo1.attach(14); //analog pin 0
-  //servo1.setMaximumPulse(2000);
-  //servo1.setMinimumPulse(700);
-
-  servo2.attach(15); //analog pin 1
-  Serial.begin(19200);
-  Serial.println("Ready");
-
+  servo1.attach(pin1);
+  servo2.attach(pin2);
+  Serial.begin(9600);
+  Serial.print("start"); 
 }
 
 void loop() {
-
-  static int v = 0;
-
-  if ( Serial.available()) {
-    char ch = Serial.read();
-
-    switch(ch) {
-      case '0'...'9':
-        v = v * 10 + ch - '0';
-        break;
-      case 's':
-        servo1.write(v);
-        v = 0;
-        break;
-      case 'w':
-        servo2.write(v);
-        v = 0;
-        break;
-      case 'd':
-        servo2.detach();
-        break;
-      case 'a':
-        servo2.attach(15);
-        break;
-    }
+  String json = "";
+  while (Serial.available() > 0) {
+    json += (char) Serial.read();
+    delay(5);
   }
 
-  Servo::refresh();
-
+  if (json != "") {
+    StaticJsonBuffer<200> jsonBuffer;
+    JsonObject &root = jsonBuffer.parseObject(json);
+    int angle1 = root["angle1"];
+    int angle2 = root["angle2"];
+    servo1.write(angle1);
+    servo2.write(angle2);
+  }
+  
 } 
