@@ -36,11 +36,9 @@ void loop() {
     Serial.println("received");
     StaticJsonBuffer<200> jsonBuffer;
     JsonObject &root = jsonBuffer.parseObject(json);
-//    int to = root["id"];
     int from = root["from"];
     int to = root["to"];
     travel(from, to);
-//    from = to;
   }
 }
 
@@ -68,13 +66,6 @@ void travel(int from, int to) {
   delay(100);
   standby();    
 }
-
-void activate(int p, int n) {
-  turnOn(p, n);
-  delay(300);
-  turnOff(p, n);
-}
-
 
 void standby() {
   shiftP.batchWriteBegin();
