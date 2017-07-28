@@ -1,105 +1,74 @@
+#include <ArduinoJson.h>
 #include <AccelStepper.h>
 
-AccelStepper stepper1(4, 2, 3, 4, 5);
-AccelStepper stepper2(4, 8, 9, 10, 11);
+//#define HALFSTEP 4  //Half-step mode (8 step control signal sequence)
+//#define mtrPin1  2     // IN1 on the ULN2003 driver 1
+//#define mtrPin2  3     // IN2 on the ULN2003 driver 1
+//#define mtrPin3  4     // IN3 on the ULN2003 driver 1
+//#define mtrPin4  5     // IN4 on the ULN2003 driver 1
+//
+//#define HALFSTEP2 4  //Half-step mode (8 step control signal sequence)
+//#define mtrPin5  8     // IN1 on the ULN2003 driver 2
+//#define mtrPin6  9     // IN2 on the ULN2003 driver 2
+//#define mtrPin7  10    // IN3 on the ULN2003 driver 2
+//#define mtrPin8  11    // IN4 on the ULN2003 driver 2
 
-int calculateStep(int angle){
-  if(angle >360 || angle <-360){
+AccelStepper stepper1(AccelStepper::FULL4WIRE, 2, 3, 4, 5);
+AccelStepper stepper2(AccelStepper::FULL4WIRE, 8, 9, 10, 11);
+
+float calculateStep(float angle);
+
+void setup() {
+   Serial.begin(9600);
+   Serial.println("starting");
+
+  //Motor A
+  stepper1.setMaxSpeed(1000.0);
+  stepper1.setAcceleration(100.0);
+  stepper1.setSpeed(300);
+  stepper1.setCurrentPosition(0);
+
+  //Motor B
+  stepper2.setMaxSpeed(800.0);
+  stepper2.setAcceleration(100.0);
+  stepper2.setSpeed(300);
+  stepper2.setCurrentPosition(0);
+}
+
+bool running = true;
+
+void loop() {
+   String json = "";
+   while (Serial.available() > 0) {
+     json += (char) Serial.read();
+     delay(5);
+   }
+
+  if (json != "") {
+    Serial.println("received");
+    StaticJsonBuffer<200> jsonBuffer;
+    JsonObject &root = jsonBuffer.parseObject(json);
+
+    float angle = root["angle"];
+    float step = calculateStep(angle); 
+    stepper2.moveTo(step);
+  }
+
+  stepper2.run();
+  Serial.println(stepper2.currentPosition());
+}
+
+float calculateStep(float angle){
+  if(angle > 360 || angle < -360){
     Serial.println("valid angles are between -360 and 360");
     return 0;
   }
   Serial.println(angle);
-  Serial.println(float(4096/360)*90);
-
-  float steps = (float(4096/360)*angle);
+  float step = (2048/360)*angle;
   Serial.println("Expect to move: ");
-  Serial.print(steps);
+  Serial.print(step);
   Serial.print(" steps.");
-  return int(steps);
+  return step;
 }
 
-String inString = "";    // string to hold input
 
-void setup() {
-  Serial.begin(9600);
-  Serial.println("starting");
-  Serial.println("90 degree = 1024");
-  Serial.println("180 degree = 2048");
-  Serial.println("360 degree = 4096");
-
-  //Motor A
-  stepper1.setMaxSpeed(800.0);
-  stepper1.setAcceleration(100.0);
-
-  //Motor B
-  // stepper2.setMaxSpeed(800.0);
-  // stepper2.setAcceleration(100.0);
-  // stepper2.moveTo(4096);
-}
-
-int position1 = 0;
-int position2 = 0;
-int current1 = 0;
-int current2 = 0;
-
-int parsedAngle = 0;
-
-void loop() {
-  if (Serial.available() > 0) {
-    char ch = Serial.read();
-
-    Serial.print("I received: ");
-    Serial.print(ch);
-
-    switch (ch) {
-      case 'A': {
-        position1 = calculateStep(90); //90 degrees
-        stepper1.moveTo(position1);
-        // position2 = calculateStep(90); //90 degrees
-        // stepper2.moveTo(position2);
-        break;
-      }
-      case 'B': {
-        position1 = calculateStep(180); //180 degrees
-        stepper1.moveTo(position1);
-        // position2 = calculateStep(180); //180 degrees
-        // stepper2.moveTo(position2);
-        break;
-      }
-      case 'C': {
-        position1 = -2048; //180 degrees
-        stepper1.moveTo(-stepper1.currentPosition());
-        // position2 = -2048; //180 degrees
-        // stepper2.moveTo(-stepper2.currentPosition());
-        break;
-      }
-      default: {
-        Serial.println("Default Triggered");
-      }
-    }
-  }
-
-  stepper1.run();
-  // stepper2.run();
-
-
-  /*
-   while ((position1 - current1 != 0) || (position2 - current2 != 0)) {
-     current1 = stepper1.currentPosition();
-   current2 = stepper2.currentPosition();
-
-
-     if ((position1 - current1 )!= 0 && (position2 - current2)) {
-       stepper1.run();
-       stepper2.run();
-     }
-     else if (position2 - current2 != 0) {
-       stepper2.run();
-     }
-     else {
-       stepper1.run();
-       stepper2.run();
-     }
-   }
-  */
-}
